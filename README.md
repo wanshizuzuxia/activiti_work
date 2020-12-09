@@ -1,11 +1,58 @@
 # activiti_work
 
 #### 介绍
-springboot +shiro +activiti 工作流项目 ，doc文件中有工作流API使用
+ 工作流项目 ，doc文件中有工作流API使用
+
+运行环境
+
+jdk8+mysql+IntelliJ IDEA+maven+redis
+
+项目技术(必填)
+
+springboot+layui+maven+apache shiro+activiti+thymeleaf+mybatis
 
 #### 软件架构
 springboot 单体架构 redis mysql shiro 很适合学习用 
-
+`kvf-admin
+ │
+ │ pom.xml maven依赖管理pom文件
+ │  
+ ├─sql
+ │      kvf_sys.sql  项目初始化数据表及基础数据sql脚本
+ │      
+ └─src
+     ├─main
+     │  ├─java
+     │  │  └─com
+     │  │      └─kalvin
+     │  │          └─kvf
+     │  │              │  KvfAdminApplication.java   项目启动类
+     │  │              │  
+     │  │              ├─common  通用模块
+     │  │              └─modules 功能模块
+     │  │                  ├─generator   代码生成器模块
+     │  │                  └─sys 系统模块（核心）
+     │  └─resources
+     │      │  application.yml   spring boot 配置文件
+     │      │  ehcache.xml   ehcache缓存配置文件
+     │      │  
+     │      ├─mapper mybatis mapper文件
+     │      ├─static 静态资料
+     │      └─templates  模板
+     │          │  403.html  403页面
+     │          │  home.html 系统首页页面
+     │          │  index.html   主页
+     │          │  login.html   登录页
+     │          │  
+     │          ├─common 通用模板
+     │          │      base.html
+     │          │      sys_tpl.html
+     │          │      
+     │          ├─generator  生成器模板
+     │          │          
+     │          └─sys    系统页面模板
+     │                  
+     └─test  单元测试块`
 
 #### 安装教程
 
@@ -67,10 +114,9 @@ ACT_GE_*: 通用数据， 用于不同场景下，如存放资源文件。
 
 #### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+特别感谢：雷哥（武汉尚学堂）
+B站学习地址：https://www.bilibili.com/video/BV1Ut411y7NT
+ 
 
 
 #### 特技
