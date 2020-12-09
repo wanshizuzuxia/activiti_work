@@ -13,7 +13,7 @@ springboot+layui+maven+apache shiro+activiti+thymeleaf+mybatis
 
 #### 软件架构
 springboot 单体架构 redis mysql shiro 很适合学习用 
-`kvf-admin
+kvf-admin
  │
  │ pom.xml maven依赖管理pom文件
  │  
@@ -52,7 +52,7 @@ springboot 单体架构 redis mysql shiro 很适合学习用
      │          │          
      │          └─sys    系统页面模板
      │                  
-     └─test  单元测试块`
+     └─test  单元测试块
 
 #### 安装教程
 
