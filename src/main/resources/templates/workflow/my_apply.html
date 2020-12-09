@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                                <!--<div class="layui-inline">
+                                    <label class="layui-form-label">标题</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="titleName" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>-->
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">流程名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="processName" placeholder="请输入流程名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset" data-event="refresh">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="layui-card-body">
+                        <table id="kContentTable" lay-filter="kContentTable"></table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl">
+<!--    <button class="layui-btn layui-btn-sm " lay-event="add">创建</button>-->
+<!--    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchdel">删除</button>-->
+<!--    <button class="layui-btn layui-btn-sm layui-bg-blue" lay-event="export">导出</button>-->
+<!--    <button class="layui-btn layui-btn-sm layui-bg-orange" lay-event="import">导入</button>-->
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="view"><i class="layui-icon layui-icon-more"></i>查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="historicReview"><i class="layui-icon layui-icon-help"></i>历史审批</a>
+</script>
+
+<!--表格列格式化模板 start-->
+<script type="text/html" id="statusTpl">
+    {{#  if(d.processStatus == 1){ }}
+    <span class="layui-badge layui-bg-blue">审批中</span>
+    {{# } else if(d.processStatus == 2) { }}
+    <span class="layui-badge layui-bg-black">已结束</span>
+    {{# } else { }}
+    <span class="layui-badge layui-bg-green">未提交</span>
+    {{# } }}
+</script>
+<!--表格列格式化模板 end-->
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table', 'laydate', 'upload'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
+        var upload = layui.upload;
+        var tableId = 'kContentTable';
+        var area = ['449px', '95%'];
+
+        // 实例化table
+        var tableIns = table.render($.extend(config.layui.table, {
+            elem: '#' + tableId
+            ,url: BASE_WEB + 'workflow/myapply/list' // 数据接口
+            ,toolbar: '#headToolbarTpl'
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                // ,{field: 'id', title: '流程ID', width: 130}
+                ,{field: 'theme', title: '标题'}
+                ,{field: 'name', title: '所属流程', width: 200}
+                ,{field: 'currentTaskNames', title: '当前环节', width: 200}
+                ,{field: 'processStatus', title: '流程状态', width: 90, align: 'center', templet: '#statusTpl'}
+                ,{field: 'startTime', title: '创建时间', width: 180, templet: formatStartTime}
+                ,{field: 'submitTime', title: '申请时间', width: 180, templet: formatSubmitTime}
+                ,{field: '', title: '操作', width: 180, fixed: 'right', templet: '#rowToolbarTpl'}
+            ]]
+        }));
+
+        // 表格行按钮 监听事件
+        table.on('tool(' + tableId + ')', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'view') {
+                var idx = layer.open({
+                    type: 2
+                    ,title: data.processName
+                    ,content: BASE_WEB + 'workflow/process/{processInstanceId}/form'.replace('{processInstanceId}', data.id)
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                });
+                layer.full(idx);
+            }
+            if (layEvent === 'historicReview') {
+                idx = layer.open({
+                    type: 2
+                    ,title: '历史审批信息'
+                    ,content: BASE_WEB + 'workflow/hisComment/index?processInstanceId=' + data.processInstanceId
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                });
+                layer.full(idx);
+            }
+        });
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            renderTableData(obj.field);
+            return false;
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+
+            tableIns.reload({
+                where: params,
+                page: {curr: 1}
+            });
+        }
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+        function formatStartTime(d) {
+            return new Date(d.startTime).format("yyyy-MM-dd hh:mm:ss")
+        }
+
+        function formatSubmitTime(d) {
+            if (!d.submitTime) {
+                return '';
+            }
+            return new Date(d.submitTime).format("yyyy-MM-dd hh:mm:ss");
+        }
+
+    });
+</script>
+
+</body>
+</html>
