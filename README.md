@@ -90,10 +90,10 @@ ACT_GE_*: 通用数据， 用于不同场景下，如存放资源文件。
 3) act_ru_task 运行时任务节点表
 4) act_ru_variable 运行时流程变量数据表
 3：历史数据库表
-1) act_hi_actinst 历史节点表
+1) act_hi_actinst 历史节点表 活动信息
 2) act_hi_attachment 历史附件表
 3) act_hi_comment 历史意见表
-4) act_hi_identitylink 历史流程人员表
+4) act_hi_identitylink 历史流程人员表 参与者信息
 5) act_hi_detail 历史详情表，提供历史变量的查询
 6) act_hi_procinst 历史流程实例表
 7) act_hi_taskinst 历史任务实例表
